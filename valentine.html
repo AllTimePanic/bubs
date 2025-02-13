@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubs, Will You Be My Valentine?</title>
+    <style>
+        body {
+            background-color: #0a0a2a;
+            color: white;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 100px;
+            width: 100%;
+            position: relative;
+        }
+        .btn {
+            font-size: 1.5em;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: transform 0.2s;
+            position: relative;
+        }
+        .yes {
+            background-color: yellow;
+            color: black;
+        }
+        .no {
+            background-color: red;
+            color: white;
+        position:fixed
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s, left 0.1s, top 0.1s;
+        }
+        .confetti {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .confetti-piece {
+            position: absolute;
+            background-color: yellow;
+            width: 10px;
+            height: 10px;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: fall 5s linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Bubs, Will You Be My Valentine? 💛</h1>
+    <div class="buttons">
+        <button class="btn yes" onclick="showConfetti()">Yes</button>
+        <button class="btn no" id="no-btn">No</button>
+    </div>
+    <div class="confetti" id="confetti-container"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const noBtn = document.getElementById("no-btn");
+
+            function moveNoButton(event) {
+                let mouseX = event.clientX;
+                let mouseY = event.clientY;
+
+                let btnRect = noBtn.getBoundingClientRect();
+                let btnX = btnRect.left + btnRect.width / 2;
+                let btnY = btnRect.top + btnRect.height / 2;
+
+                let deltaX = mouseX - btnX;
+                let deltaY = mouseY - btnY;
+                let distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+                if (distance < 100) { // If mouse gets too close, move button away
+                    let angle = Math.atan2(deltaY, deltaX);
+                    let moveX = Math.cos(angle) * 100;
+                    let moveY = Math.sin(angle) * 100;
+
+                    let newX = btnRect.left + moveX;
+                    let newY = btnRect.top + moveY;
+
+                    // Keep button within screen bounds
+                    newX = Math.min(window.innerWidth - btnRect.width, Math.max(0, newX));
+                    newY = Math.min(window.innerHeight - btnRect.height, Math.max(0, newY));
+
+                    noBtn.style.transform = `translate(${newX - btnRect.left}px, ${newY - btnRect.top}px)`;
+                }
+            }
+
+            noBtn.addEventListener("mouseover", moveNoButton);
+        });
+
+        function showConfetti() {
+            let confettiContainer = document.getElementById("confetti-container");
+            for (let i = 0; i < 50; i++) {
+                let confetti = document.createElement("div");
+                confetti.classList.add("confetti-piece");
+                confetti.style.left = Math.random() * 100 + "vw";
+                confetti.style.animationDuration = (Math.random() * 2 + 1) + "s";
+                confettiContainer.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 2000);
+            }
+        }
+    </script>
+</body>
+</html>
